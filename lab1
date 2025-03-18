@@ -138,7 +138,7 @@ int main() {
     list.print();
 
     list.deleteItem(50);
-    cout << "Linked List after deleting item with int value 2: " << endl;
+    cout << "Linked List after deleting item with int value 50: " << endl;
     list.print();
 
     return 0;
