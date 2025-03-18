@@ -56,27 +56,27 @@ public:
         head = newNode;
     }
   
-void addBeforeIndex(string ind, int i, double d, string s) {
-     if (head == nullptr) return;
+	void addBeforeIndex(string ind, int i, double d, string s) {
+       if (head == nullptr) return;
 
-     if (head->name == ind) {
-         addToBeginning(i, d, s);
-         return;
-     }
+     	if (head->name == ind) {
+         	addToBeginning(i, d, s);
+         	return;
+     	}
 
-     Node* temp = head;
-     while (temp->next != nullptr && temp->next->name != ind) {
-         temp = temp->next;
-     }
+     	Node* temp = head;
+     	while (temp->next != nullptr && temp->next->name != ind) {
+         	temp = temp->next;
+     	}
 
-      if (temp != nullptr) {
-            Node* newNode = new Node(i, d, s);
-            newNode->next = temp->next;
-            temp->next = newNode;
-        } else {
-            cout << "thing  with name"  << ind << "' was not found" << endl;
-        }
-    }
+      	if (temp != nullptr) {
+            	Node* newNode = new Node(i, d, s);
+            	newNode->next = temp->next;
+            	temp->next = newNode;
+        	} else {
+            	cout << "thing  with name"  << ind << "' was not found" << endl;
+        	}
+    	}
     void addAfterIndex(int index, int c, double w, string n) {
         Node* temp = head;
         int count = 0;
@@ -130,8 +130,8 @@ int main() {
     LinkedList list;
 
     list.addToEnd(150, 100.0, "Chocolate");
-    list.addToEnd(50, 40.5, "Tomato");
     list.addToBeginning(235, 250.0, "Sweets");
+  	list.addBeforeIndex("Sweets", 50, 40.5, "Tomato");
     list.addAfterIndex(2, 5 ,500.0, "cake");
 
     cout << "Linked List after additions: " << endl;
