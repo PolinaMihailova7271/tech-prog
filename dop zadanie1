@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Animal {
+protected: 
+    string name;
+    string sound;
+
+public:
+    Animal(const string& name, const string& sound) : name(name), sound(sound) {}
+    virtual void displayInfo() const {
+        cout << "Animal: " << name << endl;
+        cout << "Make a sound: " << sound << endl;
+    }
+
+    virtual void behave() const {
+        cout << name << " walk" << endl;
+    }
+};
+
+class Giraffe : public Animal {
+private:
+    double height;
+
+public:
+    Giraffe(const string& name, double height) : Animal(name, "snorts"), height(height) {}
+
+    void displayInfo() const override {
+        Animal::displayInfo(); 
+        cout << "height: " << height << " meters" << endl;
+    }
+
+    void behave() const override {
+        cout << name << " reaches for the leaves" << endl;
+    }
+};
+
+class Elephant : public Animal {
+private:
+    double tuskLength; 
+
+public:
+    Elephant(const string& name, double tuskLength) : Animal(name, "trumpets"), tuskLength(tuskLength) {}
+    void displayInfo() const override {
+        Animal::displayInfo(); 
+        cout << "tusk length: " << tuskLength << " meters" << endl;
+    }
+
+    void behave() const override {
+        cout << name << " pour  water from its trunk" << endl;
+    }
+};
+
+class Lion : public Animal {
+private:
+    int maneSize; 
+
+public:
+    Lion(const string& name, int maneSize) : Animal(name, "growls"), maneSize(maneSize) {}
+    void displayInfo() const override {
+        Animal::displayInfo();
+        cout << "mane size: " << maneSize << " centimetrs" << endl;
+    }
+
+    void behave() const override {
+        cout << name << " hunt animals" << endl;
+    }
+};
+
+int main() {
+    Giraffe giraffe("Nano", 5.5);
+    Elephant elephant("Dambo", 2.8);
+    Lion lion("Rag", 80);
+  
+    cout << "Information about Giraffe" << endl;
+    giraffe.displayInfo();
+    giraffe.behave();
+    cout << endl;
+
+    cout << "Information about Elephant" << endl;
+    elephant.displayInfo();
+    elephant.behave();
+    cout << endl;
+
+    cout << "Information about Lion" << endl;
+    lion.displayInfo();
+    lion.behave();
+    cout << endl;
+
+    return 0;
+}
+
+
