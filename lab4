@@ -1,0 +1,211 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Класс с описанием фильма
+class Movie {
+public:
+    string title;
+    string director;
+    int year;
+    string genre;
+    double rating;
+};
+
+// Глобальный список фильмов с начальными значениями
+vector<Movie> movies = {
+    {"Побег из Шоушенка", "Фрэнк Дарабонт", 1994, "Драма", 9.3},
+    {"Крёстный отец", "Фрэнсис Форд Коппола", 1972, "Криминал", 9.2},
+    {"Тёмный рыцарь", "Кристофер Нолан", 2008, "Боевик", 9.0},
+    {"Форрест Гамп", "Роберт Земекис", 1994, "Драма", 8.8},
+    {"Начало", "Кристофер Нолан", 2010, "Фантастика", 8.7}
+};
+
+// Добавить фильм вручную
+void addMovie() {
+    Movie m;
+    cout << "Введите название фильма: ";
+    cin.ignore();
+    getline(cin, m.title);
+    cout << "Введите режиссёра: ";
+    getline(cin, m.director);
+    cout << "Введите год выпуска: ";
+    cin >> m.year;
+    cin.ignore();
+    cout << "Введите жанр: ";
+    getline(cin, m.genre);
+    cout << "Введите рейтинг (0.0 - 10.0): ";
+    cin >> m.rating;
+
+    movies.push_back(m);
+    cout << "Фильм добавлен!\n";
+}
+
+// Сохранение и загрузка
+void saveToFile(const string& filename) {
+    ofstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Ошибка открытия файла для записи!\n";
+        return;
+    }
+
+    for (const auto& m : movies) {
+        file << m.title << "|" << m.director << "|" << m.year << "|"
+             << m.genre << "|" << m.rating << "\n";
+    }
+
+    file.close();
+    cout << "Данные сохранены в файл " << filename << "\n";
+}
+
+void loadFromFile(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Ошибка открытия файла для чтения!\n";
+        return;
+    }
+
+    movies.clear();
+    string line;
+    while (getline(file, line)) {
+        Movie m;
+        size_t pos = 0;
+
+        pos = line.find('|');
+        m.title = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        pos = line.find('|');
+        m.director = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        pos = line.find('|');
+        m.year = stoi(line.substr(0, pos));
+        line.erase(0, pos + 1);
+
+        pos = line.find('|');
+        m.genre = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        m.rating = stod(line);
+
+        movies.push_back(m);
+    }
+
+    file.close();
+    cout << "Данные загружены из файла " << filename << "\n";
+}
+
+// Обновление и удаление
+void updateMovie(int index) {
+    if (index < 0 || index >= movies.size()) {
+        cout << "Неверный индекс фильма!\n";
+        return;
+    }
+
+    Movie& m = movies[index];
+    cout << "Текущие данные фильма:\n";
+    cout << "Название: " << m.title << "\n";
+    cout << "Режиссёр: " << m.director << "\n";
+    cout << "Год: " << m.year << "\n";
+    cout << "Жанр: " << m.genre << "\n";
+    cout << "Рейтинг: " << m.rating << "\n";
+
+    cout << "Введите новые данные:\n";
+    cin.ignore();
+    cout << "Название: ";
+    getline(cin, m.title);
+    cout << "Режиссёр: ";
+    getline(cin, m.director);
+    cout << "Год: ";
+    cin >> m.year;
+    cin.ignore();
+    cout << "Жанр: ";
+    getline(cin, m.genre);
+    cout << "Рейтинг: ";
+    cin >> m.rating;
+
+    cout << "Данные фильма обновлены!\n";
+}
+
+void deleteMovie(int index) {
+    if (index < 0 || index >= movies.size()) {
+        cout << "Неверный индекс фильма!\n";
+        return;
+    }
+
+    movies.erase(movies.begin() + index);
+    cout << "Фильм удалён!\n";
+}
+
+// Показать фильмы
+void printMovies() {
+    if (movies.empty()) {
+        cout << "Список фильмов пуст.\n";
+        return;
+    }
+
+    cout << "Список фильмов:\n";
+    for (size_t i = 0; i < movies.size(); ++i) {
+        cout << i << ": \"" << movies[i].title << "\", реж. " << movies[i].director 
+             << ", " << movies[i].year << " г., жанр: " << movies[i].genre 
+             << ", рейтинг: " << movies[i].rating << "\n";
+    }
+}
+
+// Главная функция
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+    string filename = "movies.txt";
+    int choice;
+
+    // Выводим предзаполненный список при запуске
+    printMovies();
+
+    while (true) {
+        cout << "\nМеню:\n";
+        cout << "1. Добавить фильм\n";
+        cout << "2. Обновить фильм\n";
+        cout << "3. Удалить фильм\n";
+        cout << "4. Показать все фильмы\n";
+        cout << "5. Сохранить и выйти\n";
+        cout << "Выберите действие: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                addMovie();
+                break;
+            case 2: {
+                int index;
+                printMovies();
+                cout << "Введите индекс фильма для обновления: ";
+                cin >> index;
+                updateMovie(index);
+                break;
+            }
+            case 3: {
+                int index;
+                printMovies();
+                cout << "Введите индекс фильма для удаления: ";
+                cin >> index;
+                deleteMovie(index);
+                break;
+            }
+            case 4:
+                printMovies();
+                break;
+            case 5:
+                saveToFile(filename);
+                return 0;
+            default:
+                cout << "Неверный выбор!\n";
+        }
+    }
+
+    return 0;
+}
